@@ -23,3 +23,9 @@ services:
         value: "true"
       - key: PORT
         value: "8080"
+      # Render's free instance has only 512 MB RAM and a tiny CPU, so the JVM must stay small (the local Docker setup uses 512 MB heap).
+      - key: CATALINA_OPTS
+        value: "-Duser.timezone=Asia/Kolkata -Xms96m -Xmx256m -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC -XX:+HeapDumpOnOutOfMemoryError"
+      # Aiven's free MySQL allows only a few connections.
+      - key: POOL_SIZE
+        value: "5"
