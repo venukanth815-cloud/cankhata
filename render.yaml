@@ -1,0 +1,25 @@
+# Render Blueprint: one free web service built from the Dockerfile.
+# MySQL is NOT on Render's free plan, so use a free Aiven MySQL and paste its details when Render asks.
+services:
+  - type: web
+    name: cankhata
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: OWNER_PHONE
+        sync: false
+      - key: OWNER_PASSWORD
+        sync: false
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: PORT
+        value: "8080"

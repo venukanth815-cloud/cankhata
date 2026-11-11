@@ -1,0 +1,29 @@
+<configuration>
+  <!-- Where log files go. Override with the LOG_DIR environment variable. -->
+  <property name="LOG_DIR" value="${LOG_DIR:-logs}"/>
+  <!-- [%X{rid}] = request id, so you can grep one request across many log lines -->
+  <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{rid}] %logger{20} - %msg%n"/>
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder><pattern>${PATTERN}</pattern></encoder>
+  </appender>
+
+  <!-- One file per day, kept for 14 days, capped at 500 MB in total -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/cankhata.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/cankhata.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>14</maxHistory>
+      <totalSizeCap>500MB</totalSizeCap>
+    </rollingPolicy>
+    <encoder><pattern>${PATTERN}</pattern></encoder>
+  </appender>
+
+  <logger name="com.cankhata" level="${LOG_LEVEL:-INFO}"/>
+  <logger name="com.zaxxer.hikari" level="INFO"/>
+
+  <root level="WARN">
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+  </root>
+</configuration>

@@ -1,0 +1,12 @@
+target/
+logs/
+.env
+*.log
+*.hprof
+.idea/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+src/main/resources/db.properties

@@ -1,0 +1,52 @@
+# Local setup in one command:  docker compose up --build
+# Needs a .env file (copy .env.example to .env and edit). Everything here is free.
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: cankhata_db
+      MYSQL_USER: cankhata
+      MYSQL_PASSWORD: ${DB_PASSWORD:?set DB_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?set DB_ROOT_PASSWORD in .env}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci",
+              "--max-connections=151", "--slow-query-log=1", "--long-query-time=1"]
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3307:3306"        # so you can connect with MySQL Workbench on port 3307
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+      - "9010:9010"        # JMX for VisualVM / JConsole. LOCAL ONLY: it has no password.
+    environment:
+      DB_URL: jdbc:mysql://db:3306/cankhata_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
+      DB_USER: cankhata
+      DB_PASSWORD: ${DB_PASSWORD}
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in .env (32+ characters)}
+      OWNER_PHONE: ${OWNER_PHONE:?set OWNER_PHONE in .env}
+      OWNER_PASSWORD: ${OWNER_PASSWORD:?set OWNER_PASSWORD in .env}
+      OWNER_NAME: ${OWNER_NAME:-Owner}
+      COOKIE_SECURE: "false"
+      POOL_SIZE: "20"
+      CATALINA_OPTS: >-
+        -Duser.timezone=Asia/Kolkata -Xms256m -Xmx512m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/usr/local/tomcat/logs
+        -Xlog:gc*:file=/usr/local/tomcat/logs/gc.log:time,uptime:filecount=5,filesize=5m
+        -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=9010
+        -Dcom.sun.management.jmxremote.rmi.port=9010 -Dcom.sun.management.jmxremote.authenticate=false
+        -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=localhost
+    volumes:
+      - applogs:/usr/local/tomcat/logs
+
+volumes:
+  dbdata:
+  applogs:

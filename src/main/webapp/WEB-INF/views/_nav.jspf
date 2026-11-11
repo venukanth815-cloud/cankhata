@@ -1,0 +1,24 @@
+<%-- Top bar shared by all logged-in pages. Included with <%@ include file="_nav.jspf" %> --%>
+<nav class="navbar navbar-ck mb-3">
+  <div class="container">
+    <a class="navbar-brand fw-semibold" href="${ctx}/home">💧 CanKhata</a>
+    <div class="d-flex align-items-center gap-2">
+      <span class="navbar-text d-none d-sm-inline">
+        <c:out value="${user.name}"/> <span class="badge bg-light text-dark"><c:out value="${user.role.label}"/></span>
+      </span>
+      <a class="btn btn-sm btn-outline-light" href="${ctx}/account/password">Password</a>
+      <form method="post" action="${ctx}/logout" class="m-0">
+        <input type="hidden" name="_csrf" value="${csrf}">
+        <button class="btn btn-sm btn-outline-light" type="submit">Logout</button>
+      </form>
+    </div>
+  </div>
+</nav>
+<c:set var="homeUri" value="${ctx}/home"/>
+<c:if test="${requestScope['jakarta.servlet.forward.request_uri'] ne homeUri}">
+  <div class="container mb-2 d-flex gap-2">
+    <button type="button" class="btn btn-sm btn-outline-secondary" data-back>Back</button>
+    <a class="btn btn-sm btn-outline-secondary" href="${ctx}/home">&#127968; Home</a>
+  </div>
+  <script src="${ctx}/assets/js/nav.js" defer></script>
+</c:if>

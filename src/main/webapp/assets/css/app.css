@@ -1,0 +1,19 @@
+/* CanKhata: small additions on top of Bootstrap 5. Mobile first. */
+:root { --ck-blue: #0b6fa4; --ck-blue-dark: #085a86; --ck-bg: #f2f7fa; }
+body { background: var(--ck-bg); min-height: 100vh; }
+.navbar-ck { background: var(--ck-blue); }
+.navbar-ck .navbar-brand, .navbar-ck .navbar-text { color: #fff; }
+.btn-ck { background: var(--ck-blue); border-color: var(--ck-blue); color: #fff; }
+.btn-ck:hover { background: var(--ck-blue-dark); border-color: var(--ck-blue-dark); color: #fff; }
+.btn, .form-control, .form-select { min-height: 44px; }           /* easy to tap with a thumb */
+.login-wrap { max-width: 420px; margin: 8vh auto 0; }
+.card { border: 0; box-shadow: 0 1px 3px rgba(0, 0, 0, .08); border-radius: 12px; }
+.tile { display: block; text-decoration: none; color: inherit; height: 100%; }
+.tile:hover .card { box-shadow: 0 3px 10px rgba(0, 0, 0, .12); }
+.tile.disabled { opacity: .55; pointer-events: none; }
+.user-card { border-bottom: 1px solid #e3ecf1; padding: .75rem 0; }
+.user-card:last-child { border-bottom: 0; }
+.narrow-wrap { max-width: 480px; margin-top: 6vh; }
+.skip-chip { display: inline-block; background: #e9eef2; border: 1px solid #cfd9e0; color: #33414b; border-radius: 999px; padding: .2rem .75rem; font-size: .85rem; margin: .15rem 0; }
+.skip-chip .btn-link { font-size: .85rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .35rem; }   /* text centred in every button, link or not */
